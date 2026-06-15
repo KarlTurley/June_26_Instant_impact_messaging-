@@ -130,6 +130,77 @@
   }
   .descriptor-text .accent { color: #3d2de0; font-weight: 500; }
 
+  /* Manifesto */
+  .manifesto {
+    background: #101023;
+    color: #fff;
+    justify-content: center;
+  }
+  .manifesto .topbar .logo { color: #fff; }
+  .manifesto .topbar .version { color: rgba(255, 255, 255, 0.58); }
+  .manifesto .label { color: #4ade80; }
+  .manifesto-content {
+    max-width: 1120px;
+  }
+  .manifesto-kicker {
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: #4ade80;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 1.8rem;
+  }
+  .manifesto-line {
+    font-size: clamp(18px, 2.25vw, 32px);
+    color: rgba(255, 255, 255, 0.86);
+    line-height: 1.16;
+    font-weight: 600;
+    margin: 0.34rem 0;
+    max-width: 1080px;
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  .manifesto-line.tight { margin-top: 1.3rem; }
+  .manifesto-line.belief {
+    color: #fff;
+    font-weight: 700;
+  }
+  .manifesto-line.final {
+    color: #fff;
+    font-size: clamp(36px, 5.6vw, 78px);
+    font-weight: 800;
+    line-height: 0.98;
+    margin-top: 1.55rem;
+    letter-spacing: -2px;
+  }
+  .manifesto-line .accent {
+    color: #4ade80;
+    font-weight: 800;
+  }
+  .manifesto-glow {
+    position: absolute;
+    inset: auto 8vw 8vh auto;
+    width: 210px;
+    height: 210px;
+    border: 2px solid rgba(74, 222, 128, 0.46);
+    border-radius: 50%;
+    opacity: 0;
+  }
+  .slide.active .manifesto-line {
+    animation: manifestoIn 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--delay);
+  }
+  .slide.active .manifesto-glow {
+    animation: manifestoPulse 4.8s ease-in-out 0.6s infinite;
+  }
+  @keyframes manifestoIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes manifestoPulse {
+    0%, 100% { opacity: 0.28; transform: scale(0.88); }
+    50% { opacity: 0.78; transform: scale(1.08); }
+  }
+
   /* Solution */
   .solution-pill {
     display: inline-block;
@@ -180,6 +251,14 @@
     color: #888;
     margin-top: 1.5rem;
     font-style: italic;
+  }
+  .bold-slide .topbar *,
+  .bold-slide .content *,
+  .bold-slide .across {
+    font-weight: 700 !important;
+  }
+  .bold-slide .topbar .logo {
+    font-weight: 800 !important;
   }
 
   /* Value proposition grid */
@@ -510,7 +589,27 @@
     </div>
   </div>
 
-  <div class="slide" data-slide="2">
+  <div class="slide manifesto" data-slide="2">
+    <div class="triangle" style="top: 11%; right: 12%; border-left: 34px solid transparent; border-right: 34px solid transparent; border-bottom: 50px solid #4ade80; transform: rotate(16deg); opacity: 0.92;"></div>
+    <div class="triangle" style="bottom: 15%; left: 9%; border-left: 26px solid transparent; border-right: 26px solid transparent; border-bottom: 38px solid #d946ef; transform: rotate(-26deg); opacity: 0.72;"></div>
+    <div class="manifesto-glow"></div>
+    <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Manifesto</div></div>
+    <div class="content manifesto-content">
+      <div class="manifesto-kicker">This is the moment</div>
+      <p class="manifesto-line" style="--delay: 0.1s;">Somewhere along the way, we lost the passion for hiring.</p>
+      <p class="manifesto-line" style="--delay: 1.0s;">Every leader says people are their most important asset. Yet we left the finding of them to strangers.</p>
+      <p class="manifesto-line" style="--delay: 2.1s;">Hiring became a task. A scramble. A line item.</p>
+      <p class="manifesto-line belief tight" style="--delay: 3.0s;">It doesn't have to be.</p>
+      <p class="manifesto-line belief" style="--delay: 3.8s;">We believe hiring is the most strategic thing you do.</p>
+      <p class="manifesto-line belief" style="--delay: 4.7s;">We believe the people you bring in build the business you become.</p>
+      <p class="manifesto-line belief" style="--delay: 5.6s;">We believe in hiring with intent.</p>
+      <p class="manifesto-line" style="--delay: 6.5s;">Like every hire matters. Like talent is your advantage. Like the people you bring in are building something that lasts.</p>
+      <p class="manifesto-line belief" style="--delay: 7.6s;">Because they are.</p>
+      <p class="manifesto-line final" style="--delay: 8.4s;">Hire like you <span class="accent">mean it.</span></p>
+    </div>
+  </div>
+
+  <div class="slide" data-slide="3">
     <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
     <div class="content">
       <div class="label">Descriptor</div>
@@ -519,7 +618,7 @@
     </div>
   </div>
 
-  <div class="slide" data-slide="3">
+  <div class="slide" data-slide="4">
     <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
     <div class="content">
       <div class="label">Solution</div>
@@ -528,7 +627,7 @@
     </div>
   </div>
 
-  <div class="slide" data-slide="4">
+  <div class="slide" data-slide="5">
     <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
     <div class="content">
       <div class="label">The Journey</div>
@@ -536,7 +635,7 @@
     </div>
   </div>
 
-  <div class="slide" data-slide="5">
+  <div class="slide bold-slide" data-slide="6">
     <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
     <div class="content">
       <div class="label">What it delivers</div>
@@ -550,7 +649,7 @@
     </div>
   </div>
 
-  <div class="slide" data-slide="6">
+  <div class="slide" data-slide="7">
     <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
     <div class="content">
       <div class="label">Three Operating Models · Dual-track</div>
@@ -667,7 +766,7 @@
 <div class="nav">
   <button class="nav-btn" id="prev" aria-label="Previous slide">‹</button>
   <div class="dots" id="dots"></div>
-  <span class="counter" id="counter">1 / 12</span>
+  <span class="counter" id="counter">1 / 13</span>
   <button class="nav-btn" id="next" aria-label="Next slide">›</button>
 </div>
 <div class="hint">← → arrow keys</div>
