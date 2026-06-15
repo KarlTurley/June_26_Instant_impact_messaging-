@@ -163,6 +163,9 @@
     margin-bottom: 0;
     white-space: nowrap;
   }
+  .slide.active .manifesto-kicker {
+    animation: manifestoKickerOut 0.7s ease 27.7s forwards;
+  }
   .manifesto-line {
     position: absolute;
     left: 50%;
@@ -209,11 +212,11 @@
     opacity: 0;
   }
   .slide.active .manifesto-line:not(.final) {
-    animation: manifestoLineLife 2.7s ease forwards;
+    animation: manifestoLineLife var(--duration, 3s) ease forwards;
     animation-delay: var(--delay);
   }
   .slide.active .manifesto-line:not(.final) .manifesto-copy {
-    animation: manifestoType 1.05s steps(34, end) forwards;
+    animation: manifestoType var(--type-duration, 1.1s) steps(42, end) forwards;
     animation-delay: var(--delay);
   }
   .slide.active .manifesto-line.final {
@@ -230,8 +233,11 @@
   @keyframes manifestoLineLife {
     0% { opacity: 0; transform: translate(-50%, -38%) scale(0.98); }
     18% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    72% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    78% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     100% { opacity: 0; transform: translate(-50%, -58%) scale(1.02); }
+  }
+  @keyframes manifestoKickerOut {
+    to { opacity: 0; transform: translate(-50%, -12px); }
   }
   @keyframes manifestoFinal {
     0% { opacity: 0; transform: translate(-50%, -50%) scale(0.76); }
@@ -641,16 +647,16 @@
     <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Manifesto</div></div>
     <div class="content manifesto-content">
       <div class="manifesto-kicker">This is the moment</div>
-      <p class="manifesto-line" style="--delay: 0.2s;"><span class="manifesto-copy">Somewhere along the way, we lost the passion for hiring.</span></p>
-      <p class="manifesto-line" style="--delay: 2.8s;"><span class="manifesto-copy">Every leader says people are their most important asset. Yet we left the finding of them to strangers.</span></p>
-      <p class="manifesto-line" style="--delay: 5.4s;"><span class="manifesto-copy">Hiring became a task. A scramble. A line item.</span></p>
-      <p class="manifesto-line belief" style="--delay: 8.0s;"><span class="manifesto-copy">It doesn't have to be.</span></p>
-      <p class="manifesto-line belief" style="--delay: 10.6s;"><span class="manifesto-copy">We believe hiring is the most strategic thing you do.</span></p>
-      <p class="manifesto-line belief" style="--delay: 13.2s;"><span class="manifesto-copy">We believe the people you bring in build the business you become.</span></p>
-      <p class="manifesto-line belief" style="--delay: 15.8s;"><span class="manifesto-copy">We believe in hiring with intent.</span></p>
-      <p class="manifesto-line" style="--delay: 18.4s;"><span class="manifesto-copy">Like every hire matters. Like talent is your advantage. Like the people you bring in are building something that lasts.</span></p>
-      <p class="manifesto-line belief" style="--delay: 21.0s;"><span class="manifesto-copy">Because they are.</span></p>
-      <p class="manifesto-line final" style="--delay: 23.0s;"><span class="manifesto-copy">Hire like you <span class="accent">mean it.</span></span></p>
+      <p class="manifesto-line" style="--delay: 0.2s; --duration: 3.4s; --type-duration: 1.2s;"><span class="manifesto-copy">Somewhere along the way, we lost the passion for hiring.</span></p>
+      <p class="manifesto-line" style="--delay: 3.7s; --duration: 4.9s; --type-duration: 1.75s;"><span class="manifesto-copy">Every leader says people are their most important asset. Yet we left the finding of them to strangers.</span></p>
+      <p class="manifesto-line" style="--delay: 8.7s; --duration: 3.3s; --type-duration: 1.05s;"><span class="manifesto-copy">Hiring became a task. A scramble. A line item.</span></p>
+      <p class="manifesto-line belief" style="--delay: 12.1s; --duration: 2.7s; --type-duration: 0.85s;"><span class="manifesto-copy">It doesn't have to be.</span></p>
+      <p class="manifesto-line belief" style="--delay: 14.9s; --duration: 3.7s; --type-duration: 1.25s;"><span class="manifesto-copy">We believe hiring is the most strategic thing you do.</span></p>
+      <p class="manifesto-line belief" style="--delay: 18.7s; --duration: 4.2s; --type-duration: 1.45s;"><span class="manifesto-copy">We believe the people you bring in build the business you become.</span></p>
+      <p class="manifesto-line belief" style="--delay: 23.0s; --duration: 3.0s; --type-duration: 0.95s;"><span class="manifesto-copy">We believe in hiring with intent.</span></p>
+      <p class="manifesto-line" style="--delay: 26.1s; --duration: 5.4s; --type-duration: 1.95s;"><span class="manifesto-copy">Like every hire matters. Like talent is your advantage. Like the people you bring in are building something that lasts.</span></p>
+      <p class="manifesto-line belief" style="--delay: 31.6s; --duration: 2.5s; --type-duration: 0.7s;"><span class="manifesto-copy">Because they are.</span></p>
+      <p class="manifesto-line final" style="--delay: 34.2s;"><span class="manifesto-copy">Hire like you <span class="accent">mean it.</span></span></p>
     </div>
   </div>
 
