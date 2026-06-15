@@ -702,6 +702,21 @@
   @keyframes engineGrid {
     to { transform: translate3d(72px, 72px, 0); }
   }
+  .engine-models-caption {
+    position: relative;
+    z-index: 2;
+    margin-top: 40px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.55);
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  .solution-slide.active .engine-models-caption {
+    animation: heroFadeUp 0.6s ease 0.85s forwards;
+  }
   .engine-models {
     position: relative;
     z-index: 2;
@@ -709,7 +724,7 @@
     grid-template-columns: repeat(3, minmax(140px, 1fr));
     gap: 14px;
     width: min(760px, 82vw);
-    margin-top: 34px;
+    margin-top: 16px;
   }
   .engine-model {
     border: 1px solid rgba(255, 255, 255, 0.22);
@@ -742,6 +757,75 @@
     max-width: 1100px;
   }
   .journey-text .accent { color: #3d2de0; font-weight: 600; }
+
+  /* Journey intro — animated path */
+  .journey-intro-track {
+    margin-top: 3.6rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 22px;
+    max-width: 1100px;
+  }
+  .ji-node {
+    padding: 16px 28px;
+    border-radius: 999px;
+    font-size: clamp(14px, 1.5vw, 19px);
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.2;
+    box-shadow: 0 10px 28px rgba(26, 26, 62, 0.1);
+  }
+  .ji-node.start {
+    color: #7c2d12;
+    background: #fff8f1;
+    border: 1px solid #fed7aa;
+  }
+  .ji-node.end {
+    color: #166534;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+  }
+  .ji-line {
+    position: relative;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #d946ef, #3d2de0, #4ade80);
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  .ji-line::after {
+    content: "";
+    position: absolute;
+    right: -3px;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid #4ade80;
+    transform: translateY(-50%);
+    opacity: 0;
+  }
+  .journey-intro-slide .label,
+  .journey-intro-slide .journey-text,
+  .journey-intro-slide .ji-node {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  .journey-intro-slide.active .label { animation: heroFadeUp 0.5s ease 0s forwards; }
+  .journey-intro-slide.active .journey-text { animation: heroFadeUp 0.65s ease 0.15s forwards; }
+  .journey-intro-slide.active .ji-node.start { animation: heroFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards; }
+  .journey-intro-slide.active .ji-node.end { animation: jiNodeArrive 0.65s cubic-bezier(0.16, 1, 0.3, 1) 1.45s forwards; }
+  .journey-intro-slide.active .ji-line { animation: jiLineGrow 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards; }
+  .journey-intro-slide.active .ji-line::after { animation: jiArrowShow 0.3s ease 1.6s forwards; }
+  @keyframes jiLineGrow { to { transform: scaleX(1); } }
+  @keyframes jiArrowShow { to { opacity: 1; } }
+  @keyframes jiNodeArrive {
+    0% { opacity: 0; transform: translateY(0) scale(0.88); }
+    60% { opacity: 1; transform: translateY(0) scale(1.06); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
 
   /* What it delivers — grid */
   .delivers-grid {
@@ -1217,7 +1301,17 @@
     }
     .journey-path::before { display: none; }
     .vp-grid .vp-key { padding-top: 0; }
+    .journey-intro-track { grid-template-columns: 1fr; gap: 14px; }
+    .journey-intro-track .ji-line { height: 40px; width: 3px; justify-self: center; transform-origin: top center; }
+    .journey-intro-slide.active .ji-line { animation: jiLineGrowV 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards; }
+    .journey-intro-track .ji-line::after {
+      right: 50%; top: auto; bottom: -3px;
+      border-left: 8px solid transparent; border-right: 8px solid transparent;
+      border-top: 12px solid #4ade80; border-bottom: 0;
+      transform: translateX(50%);
+    }
   }
+  @keyframes jiLineGrowV { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 </style>
 </head>
 <body>
@@ -1290,22 +1384,28 @@
     <div class="content">
       <div class="label">Solution</div>
       <div class="engine-stage">
-        <div class="solution-pill">Instant Impact Talent Engine</div>
+        <div class="solution-pill">The Instant Impact Talent Engine</div>
+        <div class="engine-models-caption">Three operating models</div>
         <div class="engine-models" aria-label="Talent Engine operating models">
-          <div class="engine-model" style="--model-delay: 0.82s;">Talent Function</div>
-          <div class="engine-model" style="--model-delay: 1s;">Talent Focus</div>
-          <div class="engine-model" style="--model-delay: 1.18s;">Talent Flex</div>
+          <div class="engine-model" style="--model-delay: 1.0s;">Talent Function</div>
+          <div class="engine-model" style="--model-delay: 1.18s;">Talent Focus</div>
+          <div class="engine-model" style="--model-delay: 1.36s;">Talent Flex</div>
         </div>
       </div>
-      <div class="footnote">One solution. One umbrella. Three operating models underneath.</div>
+      <div class="footnote">One solution. One umbrella.</div>
     </div>
   </div>
 
-  <div class="slide" data-slide="5">
+  <div class="slide journey-intro-slide" data-slide="5">
     <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
     <div class="content">
       <div class="label">The Journey</div>
-      <div class="journey-text">From fragmented agency dependency to <span class="accent">world class talent acquisition</span>.<br>Three operating models cover the spectrum.</div>
+      <div class="journey-text">From fragmented agency dependency to <span class="accent">world class talent acquisition</span>.</div>
+      <div class="journey-intro-track" aria-label="The journey from fragmented agency dependency to world class talent acquisition">
+        <span class="ji-node start">Fragmented agency dependency</span>
+        <span class="ji-line"></span>
+        <span class="ji-node end">World class talent acquisition</span>
+      </div>
     </div>
   </div>
 
