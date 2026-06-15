@@ -94,9 +94,28 @@
   }
 
   /* Cover */
-  .cover { align-items: center; justify-content: center; text-align: center; padding-top: 0; }
-  .cover-logo { font-weight: 800; font-size: 40px; color: #3d2de0; line-height: 1; margin-bottom: 5vh; }
+  .cover {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 0;
+    background:
+      radial-gradient(circle at 50% 58%, rgba(74, 222, 128, 0.1), transparent 24%),
+      radial-gradient(circle at 82% 22%, rgba(217, 70, 239, 0.08), transparent 24%),
+      #fff;
+  }
+  .cover-logo {
+    position: relative;
+    z-index: 2;
+    font-weight: 800;
+    font-size: 40px;
+    color: #3d2de0;
+    line-height: 1;
+    margin-bottom: 5vh;
+  }
   .cover-title {
+    position: relative;
+    z-index: 2;
     font-size: clamp(72px, 10vw, 140px);
     font-weight: 700;
     color: #1a1a3e;
@@ -104,12 +123,49 @@
     letter-spacing: -4px;
   }
   .cover-subtitle {
+    position: relative;
+    z-index: 2;
     font-size: 14px;
     letter-spacing: 4px;
     color: #888;
     text-transform: uppercase;
     font-weight: 600;
     margin-top: 4vh;
+  }
+  .cover .underline-wrap svg path {
+    stroke-dasharray: 220;
+    stroke-dashoffset: 220;
+  }
+  .cover.active .underline-wrap svg path {
+    animation: coverUnderlineDraw 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.85s forwards;
+  }
+  .cover.active .triangle {
+    animation:
+      coverTriangleIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) var(--triangle-delay) forwards,
+      coverTriangleFloat 5.2s ease-in-out calc(var(--triangle-delay) + 0.85s) infinite;
+  }
+  @keyframes coverUnderlineDraw {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes coverTriangleIn {
+    0% {
+      opacity: 0;
+      transform: translate3d(var(--start-x), var(--start-y), 0) rotate(var(--base-rotate)) scale(0.82);
+    }
+    100% {
+      opacity: var(--triangle-opacity);
+      transform: translate3d(0, 0, 0) rotate(var(--base-rotate)) scale(1);
+    }
+  }
+  @keyframes coverTriangleFloat {
+    0%, 100% {
+      opacity: var(--triangle-opacity);
+      transform: translate3d(0, 0, 0) rotate(var(--base-rotate)) scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: translate3d(var(--float-x), var(--float-y), 0) rotate(calc(var(--base-rotate) + var(--rotate-drift))) scale(1.04);
+    }
   }
 
   /* Big headline (Platform slide) */
@@ -132,7 +188,11 @@
 
   /* Manifesto */
   .manifesto {
-    background: #101023;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(74, 222, 128, 0.08), transparent 32%),
+      radial-gradient(circle at 18% 24%, rgba(217, 70, 239, 0.1), transparent 28%),
+      radial-gradient(circle at 82% 72%, rgba(6, 182, 212, 0.08), transparent 30%),
+      #080814;
     color: #fff;
     align-items: center;
     justify-content: center;
@@ -144,10 +204,9 @@
     inset: -14%;
     z-index: 0;
     background:
-      linear-gradient(rgba(255, 255, 255, 0.062) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.062) 1px, transparent 1px);
-    background-size: 92px 92px;
-    opacity: 0.58;
+      radial-gradient(circle at 28% 38%, rgba(255, 255, 255, 0.055), transparent 24%),
+      radial-gradient(circle at 70% 62%, rgba(74, 222, 128, 0.08), transparent 28%);
+    opacity: 0.72;
     mask-image: radial-gradient(ellipse at center, #000 0 62%, transparent 84%);
     pointer-events: none;
   }
@@ -156,20 +215,13 @@
     position: absolute;
     left: 50%;
     top: 52%;
-    width: min(860px, 82vw);
-    height: min(300px, 34vh);
+    width: min(780px, 78vw);
+    height: min(250px, 32vh);
     z-index: 0;
-    border: 1px solid rgba(74, 222, 128, 0.36);
-    border-radius: 50%;
-    box-shadow:
-      0 0 0 28px rgba(74, 222, 128, 0.07),
-      0 0 0 84px rgba(74, 222, 128, 0.044);
-    opacity: 0.16;
-    transform: translate(-50%, -50%) scale(0.72);
+    background: radial-gradient(ellipse at center, rgba(74, 222, 128, 0.12), transparent 68%);
+    opacity: 0.22;
+    transform: translate(-50%, -50%) scale(0.84);
     pointer-events: none;
-  }
-  .slide.active.manifesto::before {
-    animation: manifestoGridDrift 34s linear infinite;
   }
   .slide.active.manifesto::after {
     animation: manifestoIntentFocus 38s ease forwards;
@@ -185,6 +237,23 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+  }
+  .manifesto-depth {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .manifesto-depth .triangle {
+    position: absolute;
+    opacity: 0;
+    filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.18));
+    transform: translate3d(var(--start-x), var(--start-y), 0) rotate(var(--base-rotate)) scale(var(--depth-scale));
+  }
+  .slide.active .manifesto-depth .triangle {
+    animation:
+      manifestoTriangleIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--triangle-delay) forwards,
+      manifestoTriangleFloat var(--float-duration) ease-in-out calc(var(--triangle-delay) + 0.9s) infinite;
   }
   .manifesto-kicker {
     position: absolute;
@@ -228,6 +297,7 @@
     margin-top: 0;
     letter-spacing: 0;
     width: min(1050px, 90vw);
+    text-shadow: 0 0 36px rgba(74, 222, 128, 0.22);
   }
   .manifesto-line .accent {
     color: #4ade80;
@@ -249,6 +319,7 @@
     height: 210px;
     border: 2px solid rgba(74, 222, 128, 0.46);
     border-radius: 50%;
+    background: transparent;
     opacity: 0;
   }
   .slide.active .manifesto-line:not(.final) {
@@ -288,20 +359,68 @@
     to { clip-path: inset(0 0 0 0); }
   }
   @keyframes manifestoPulse {
-    0%, 100% { opacity: 0.28; transform: scale(0.88); }
-    50% { opacity: 0.78; transform: scale(1.08); }
+    0%, 100% { opacity: 0.24; transform: scale(0.88); }
+    50% { opacity: 0.76; transform: scale(1.08); }
   }
-  @keyframes manifestoGridDrift {
-    to { transform: translate3d(92px, 92px, 0); }
+  @keyframes manifestoTriangleIn {
+    0% {
+      opacity: 0;
+      transform: translate3d(var(--start-x), var(--start-y), 0) rotate(var(--base-rotate)) scale(calc(var(--depth-scale) * 0.82));
+    }
+    100% {
+      opacity: var(--triangle-opacity);
+      transform: translate3d(0, 0, 0) rotate(var(--base-rotate)) scale(var(--depth-scale));
+    }
+  }
+  @keyframes manifestoTriangleFloat {
+    0%, 100% {
+      opacity: var(--triangle-opacity);
+      transform: translate3d(0, 0, 0) rotate(var(--base-rotate)) scale(var(--depth-scale));
+    }
+    50% {
+      opacity: var(--triangle-opacity);
+      transform: translate3d(var(--float-x), var(--float-y), 0) rotate(calc(var(--base-rotate) + var(--rotate-drift))) scale(calc(var(--depth-scale) * 1.04));
+    }
   }
   @keyframes manifestoIntentFocus {
-    0% { opacity: 0.14; transform: translate(-50%, -50%) scale(0.72); }
-    70% { opacity: 0.22; transform: translate(-50%, -50%) scale(0.88); }
-    92% { opacity: 0.54; transform: translate(-50%, -50%) scale(1.03); }
-    100% { opacity: 0.42; transform: translate(-50%, -50%) scale(1); }
+    0% { opacity: 0.12; transform: translate(-50%, -50%) scale(0.72); }
+    70% { opacity: 0.2; transform: translate(-50%, -50%) scale(0.88); }
+    92% { opacity: 0.32; transform: translate(-50%, -50%) scale(1.03); }
+    100% { opacity: 0.26; transform: translate(-50%, -50%) scale(1); }
   }
 
   /* Solution */
+  .solution-slide {
+    background:
+      radial-gradient(circle at 50% 46%, rgba(74, 222, 128, 0.16), transparent 27%),
+      radial-gradient(circle at 18% 18%, rgba(217, 70, 239, 0.13), transparent 26%),
+      radial-gradient(circle at 84% 78%, rgba(6, 182, 212, 0.14), transparent 28%),
+      #0c0d22;
+    color: #fff;
+  }
+  .solution-slide::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    z-index: 0;
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+    background-size: 72px 72px;
+    opacity: 0.4;
+    mask-image: radial-gradient(circle at center, #000 0 58%, transparent 82%);
+  }
+  .solution-slide.active::before {
+    animation: engineGrid 24s linear infinite;
+  }
+  .solution-slide .topbar .logo { color: #fff; }
+  .solution-slide .topbar .version { color: rgba(255, 255, 255, 0.62); }
+  .solution-slide .label { color: #4ade80; }
+  .solution-slide .footnote {
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    margin-inline: auto;
+  }
   .solution-slide .content {
     width: 100%;
     max-width: none;
@@ -310,17 +429,56 @@
     align-items: center;
     text-align: center;
   }
+  .engine-stage {
+    position: relative;
+    width: min(980px, 88vw);
+    min-height: 330px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .engine-stage::before,
+  .engine-stage::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 44%;
+    border: 1px solid rgba(74, 222, 128, 0.22);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+  .engine-stage::before {
+    width: min(760px, 78vw);
+    height: 210px;
+  }
+  .engine-stage::after {
+    width: min(560px, 64vw);
+    height: 150px;
+    border-color: rgba(6, 182, 212, 0.24);
+  }
+  .solution-slide.active .engine-stage::before {
+    animation: engineRing 2.4s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards;
+  }
+  .solution-slide.active .engine-stage::after {
+    animation: engineRing 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.24s forwards;
+  }
   .solution-pill {
     display: inline-block;
     position: relative;
     overflow: hidden;
-    background: #3d2de0;
-    color: #fff;
+    z-index: 2;
+    background: linear-gradient(135deg, #fff 0%, #f7f6ff 58%, #dffdf0 100%);
+    color: #15153a;
+    border: 1px solid rgba(255, 255, 255, 0.8);
     padding: 24px 48px;
     border-radius: 60px;
     font-size: clamp(28px, 3.5vw, 44px);
-    font-weight: 600;
-    box-shadow: 0 22px 58px rgba(61, 45, 224, 0.34);
+    font-weight: 800;
+    box-shadow:
+      0 28px 80px rgba(74, 222, 128, 0.24),
+      0 18px 56px rgba(61, 45, 224, 0.38);
     opacity: 0;
     transform: translateY(18px) scale(0.92);
   }
@@ -347,15 +505,57 @@
   @keyframes solutionPulse {
     0%, 100% {
       transform: translateY(0) scale(1);
-      box-shadow: 0 22px 58px rgba(61, 45, 224, 0.34);
+      box-shadow:
+        0 28px 80px rgba(74, 222, 128, 0.24),
+        0 18px 56px rgba(61, 45, 224, 0.38);
     }
     50% {
       transform: translateY(-2px) scale(1.018);
-      box-shadow: 0 30px 74px rgba(61, 45, 224, 0.46), 0 0 0 10px rgba(74, 222, 128, 0.08);
+      box-shadow:
+        0 34px 94px rgba(74, 222, 128, 0.3),
+        0 30px 74px rgba(61, 45, 224, 0.48),
+        0 0 0 12px rgba(74, 222, 128, 0.08);
     }
   }
   @keyframes solutionSheen {
     to { transform: translateX(130%); }
+  }
+  @keyframes engineRing {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.62); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+  @keyframes engineGrid {
+    to { transform: translate3d(72px, 72px, 0); }
+  }
+  .engine-models {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(140px, 1fr));
+    gap: 14px;
+    width: min(760px, 82vw);
+    margin-top: 34px;
+  }
+  .engine-model {
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    padding: 13px 16px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    opacity: 0;
+    transform: translateY(14px) scale(0.94);
+    backdrop-filter: blur(8px);
+  }
+  .solution-slide.active .engine-model {
+    animation: engineModelIn 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--model-delay);
+  }
+  @keyframes engineModelIn {
+    0% { opacity: 0; transform: translateY(16px) scale(0.92); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
   }
 
   /* Journey */
@@ -436,6 +636,39 @@
   .vp-because { font-weight: 500; }
 
   /* Three operating models overview */
+  .journey-hero-slide {
+    background:
+      radial-gradient(circle at 84% 18%, rgba(74, 222, 128, 0.15), transparent 28%),
+      radial-gradient(circle at 12% 82%, rgba(217, 70, 239, 0.1), transparent 26%),
+      #fbfbff;
+  }
+  .journey-hero-slide::before {
+    content: "";
+    position: absolute;
+    left: 7vw;
+    right: 7vw;
+    top: 23vh;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(61, 45, 224, 0.22), rgba(74, 222, 128, 0.42), transparent);
+    opacity: 0;
+  }
+  .journey-hero-slide.active::before {
+    animation: journeyHorizon 1.1s ease 0.25s forwards;
+  }
+  .journey-hero-slide .content {
+    max-width: 1220px;
+  }
+  .journey-hero-slide .label,
+  .journey-hero-slide .models-sub,
+  .journey-hero-slide .journey-path,
+  .journey-hero-slide .models-overview {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  .journey-hero-slide.active .label { animation: heroFadeUp 0.55s ease 0.05s forwards; }
+  .journey-hero-slide.active .models-sub { animation: heroFadeUp 0.65s ease 0.2s forwards; }
+  .journey-hero-slide.active .journey-path { animation: heroFadeUp 0.75s ease 0.42s forwards; }
+  .journey-hero-slide.active .models-overview { animation: heroFadeUp 0.85s ease 1.35s forwards; }
   .models-overview {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -511,7 +744,11 @@
     height: 2px;
     background: linear-gradient(90deg, #d946ef, #3d2de0, #4ade80);
     opacity: 0.42;
-    transform: translateY(-50%);
+    transform: translateY(-50%) scaleX(0);
+    transform-origin: left center;
+  }
+  .journey-hero-slide.active .journey-path::before {
+    animation: journeyLineGrow 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.75s forwards;
   }
   .journey-step {
     position: relative;
@@ -530,6 +767,26 @@
     font-weight: 700;
     text-align: center;
     box-shadow: 0 8px 24px rgba(26, 26, 62, 0.08);
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  .journey-hero-slide.active .journey-step {
+    animation: journeyStepIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .journey-hero-slide.active .journey-step:nth-child(1) { animation-delay: 0.82s; }
+  .journey-hero-slide.active .journey-step:nth-child(2) { animation-delay: 1s; }
+  .journey-hero-slide.active .journey-step:nth-child(3) { animation-delay: 1.18s; }
+  .journey-hero-slide.active .journey-step:nth-child(4) { animation-delay: 1.36s; }
+  .journey-hero-slide.active .journey-step:nth-child(5) { animation-delay: 1.54s; }
+  .journey-hero-slide.active .model-card {
+    animation: modelCardLift 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .journey-hero-slide.active .model-card:nth-child(1) { animation-delay: 1.55s; }
+  .journey-hero-slide.active .model-card:nth-child(2) { animation-delay: 1.7s; }
+  .journey-hero-slide.active .model-card:nth-child(3) { animation-delay: 1.85s; }
+  .journey-hero-slide .model-card {
+    opacity: 0;
+    transform: translateY(16px);
   }
   .journey-step.start {
     color: #7c2d12;
@@ -540,6 +797,23 @@
     color: #166534;
     background: #f0fdf4;
     border-color: #bbf7d0;
+  }
+  @keyframes heroFadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes journeyHorizon {
+    to { opacity: 1; }
+  }
+  @keyframes journeyLineGrow {
+    to { transform: translateY(-50%) scaleX(1); }
+  }
+  @keyframes journeyStepIn {
+    0% { opacity: 0; transform: translateY(12px) scale(0.94); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes modelCardLift {
+    0% { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
 
   /* Model deep dive */
@@ -761,6 +1035,8 @@
   @media (max-width: 720px) {
     .slide { padding: 4vh 5vw 14vh; }
     .topbar { left: 5vw; right: 5vw; }
+    .engine-stage { min-height: 390px; }
+    .engine-models { grid-template-columns: 1fr; width: min(360px, 84vw); }
     .delivers-grid, .vp-grid, .models-overview, .rules-grid, .journey-path {
       grid-template-columns: 1fr;
     }
@@ -773,9 +1049,9 @@
 <div class="deck">
 
   <div class="slide cover active" data-slide="0">
-    <div class="triangle" style="top: 12%; right: 12%; border-left: 28px solid transparent; border-right: 28px solid transparent; border-bottom: 40px solid #4ade80; transform: rotate(20deg); opacity: 0.9;"></div>
-    <div class="triangle" style="bottom: 18%; left: 10%; border-left: 32px solid transparent; border-right: 32px solid transparent; border-bottom: 48px solid #d946ef; transform: rotate(-35deg); opacity: 0.85;"></div>
-    <div class="triangle" style="top: 22%; left: 18%; border-left: 22px solid transparent; border-right: 22px solid transparent; border-bottom: 32px solid #06b6d4; transform: rotate(60deg); opacity: 0.9;"></div>
+    <div class="triangle" style="top: 12%; right: 12%; border-left: 28px solid transparent; border-right: 28px solid transparent; border-bottom: 40px solid #4ade80; --base-rotate: 20deg; --rotate-drift: 8deg; --triangle-delay: 0.16s; --triangle-opacity: 0.9; --start-x: 18px; --start-y: -22px; --float-x: -8px; --float-y: 12px; opacity: 0;"></div>
+    <div class="triangle" style="bottom: 18%; left: 10%; border-left: 32px solid transparent; border-right: 32px solid transparent; border-bottom: 48px solid #d946ef; --base-rotate: -35deg; --rotate-drift: -7deg; --triangle-delay: 0.32s; --triangle-opacity: 0.85; --start-x: -18px; --start-y: 24px; --float-x: 12px; --float-y: -10px; opacity: 0;"></div>
+    <div class="triangle" style="top: 22%; left: 18%; border-left: 22px solid transparent; border-right: 22px solid transparent; border-bottom: 32px solid #06b6d4; --base-rotate: 60deg; --rotate-drift: 9deg; --triangle-delay: 0.48s; --triangle-opacity: 0.9; --start-x: -22px; --start-y: -16px; --float-x: 10px; --float-y: 10px; opacity: 0;"></div>
     <div class="cover-logo">instant<br>impact</div>
     <div class="cover-title">Hire like you<br><span class="underline-wrap">mean it.<svg viewBox="0 0 200 8" preserveAspectRatio="none"><path d="M2 5 Q 100 1, 198 5" stroke="#4ade80" stroke-width="4" fill="none" stroke-linecap="round"/></svg></span></div>
     <div class="cover-subtitle">Messaging Architecture V3 · 15 June 2026</div>
@@ -791,9 +1067,15 @@
   </div>
 
   <div class="slide manifesto" data-slide="2">
-    <div class="triangle" style="top: 11%; right: 12%; border-left: 34px solid transparent; border-right: 34px solid transparent; border-bottom: 50px solid #4ade80; transform: rotate(16deg); opacity: 0.92;"></div>
-    <div class="triangle" style="bottom: 15%; left: 9%; border-left: 26px solid transparent; border-right: 26px solid transparent; border-bottom: 38px solid #d946ef; transform: rotate(-26deg); opacity: 0.72;"></div>
     <div class="manifesto-glow"></div>
+    <div class="manifesto-depth" aria-hidden="true">
+      <div class="triangle" style="top: 11%; right: 12%; border-left: 34px solid transparent; border-right: 34px solid transparent; border-bottom: 50px solid #4ade80; --base-rotate: 16deg; --rotate-drift: 7deg; --depth-scale: 1; --triangle-delay: 0.12s; --triangle-opacity: 0.9; --float-duration: 6.2s; --start-x: 16px; --start-y: -18px; --float-x: -8px; --float-y: 12px;"></div>
+      <div class="triangle" style="bottom: 15%; left: 9%; border-left: 26px solid transparent; border-right: 26px solid transparent; border-bottom: 38px solid #d946ef; --base-rotate: -26deg; --rotate-drift: -8deg; --depth-scale: 0.86; --triangle-delay: 0.28s; --triangle-opacity: 0.68; --float-duration: 7.1s; --start-x: -18px; --start-y: 20px; --float-x: 12px; --float-y: -10px;"></div>
+      <div class="triangle" style="top: 24%; left: 14%; border-left: 18px solid transparent; border-right: 18px solid transparent; border-bottom: 27px solid #06b6d4; --base-rotate: 58deg; --rotate-drift: 10deg; --depth-scale: 0.72; --triangle-delay: 0.42s; --triangle-opacity: 0.52; --float-duration: 6.8s; --start-x: -22px; --start-y: -12px; --float-x: 10px; --float-y: 8px;"></div>
+      <div class="triangle" style="top: 72%; right: 18%; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 30px solid #4ade80; --base-rotate: -54deg; --rotate-drift: 7deg; --depth-scale: 0.64; --triangle-delay: 0.55s; --triangle-opacity: 0.44; --float-duration: 7.5s; --start-x: 20px; --start-y: 16px; --float-x: -11px; --float-y: -9px;"></div>
+      <div class="triangle" style="top: 18%; left: 42%; border-left: 13px solid transparent; border-right: 13px solid transparent; border-bottom: 20px solid #d946ef; --base-rotate: 28deg; --rotate-drift: -6deg; --depth-scale: 0.58; --triangle-delay: 0.7s; --triangle-opacity: 0.34; --float-duration: 8.1s; --start-x: 4px; --start-y: -18px; --float-x: -7px; --float-y: 10px;"></div>
+      <div class="triangle" style="bottom: 27%; right: 34%; border-left: 16px solid transparent; border-right: 16px solid transparent; border-bottom: 24px solid #06b6d4; --base-rotate: 118deg; --rotate-drift: 8deg; --depth-scale: 0.5; --triangle-delay: 0.86s; --triangle-opacity: 0.3; --float-duration: 8.5s; --start-x: 10px; --start-y: 18px; --float-x: 8px; --float-y: -8px;"></div>
+    </div>
     <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Manifesto</div></div>
     <div class="content manifesto-content">
       <div class="manifesto-kicker">This is the moment</div>
@@ -823,7 +1105,14 @@
     <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
     <div class="content">
       <div class="label">Solution</div>
-      <div class="solution-pill">Instant Impact Talent Engine</div>
+      <div class="engine-stage">
+        <div class="solution-pill">Instant Impact Talent Engine</div>
+        <div class="engine-models" aria-label="Talent Engine operating models">
+          <div class="engine-model" style="--model-delay: 0.82s;">Talent Function</div>
+          <div class="engine-model" style="--model-delay: 1s;">Talent Focus</div>
+          <div class="engine-model" style="--model-delay: 1.18s;">Talent Flex</div>
+        </div>
+      </div>
       <div class="footnote">One solution. One umbrella. Three operating models underneath.</div>
     </div>
   </div>
@@ -850,11 +1139,11 @@
     </div>
   </div>
 
-  <div class="slide" data-slide="7">
+  <div class="slide journey-hero-slide" data-slide="7">
     <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
     <div class="content">
       <div class="label">The journey to world class talent acquisition</div>
-      <div class="models-sub">Three operating models, one direction of travel: from supplier dependency to a strategic talent engine.</div>
+      <div class="models-sub">The path is not more suppliers. It is more ownership, more intelligence, more control.</div>
       <div class="journey-path" aria-label="Journey from fragmented agency dependency to world class talent acquisition">
         <div class="journey-step start">Fragmented agency dependency</div>
         <div class="journey-step">Talent Flex</div>
