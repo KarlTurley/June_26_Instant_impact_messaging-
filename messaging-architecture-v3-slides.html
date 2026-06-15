@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messaging Architecture V3 — Instant Impact</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Poppins', system-ui, sans-serif;
+    background: #0a0a1a;
+    color: #1a1a3e;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    padding: 5vh 8vw 14vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .label {
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2rem;
+  }
+  .footnote {
+    margin-top: 2.5rem;
+    font-size: 17px;
+    color: #777;
+    max-width: 780px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .underline-wrap { display: inline-block; position: relative; }
+  .underline-wrap svg {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 12px;
+  }
+  .triangle {
+    position: absolute;
+    width: 0;
+    height: 0;
+    z-index: 1;
+  }
+  .content { position: relative; z-index: 2; max-width: 1100px; }
+
+  /* Header bar */
+  .topbar {
+    position: absolute;
+    top: 4vh;
+    left: 8vw;
+    right: 8vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 5;
+  }
+  .topbar .logo {
+    font-weight: 800;
+    font-size: 22px;
+    color: #3d2de0;
+    line-height: 1;
+  }
+  .topbar .version {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #999;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* Cover */
+  .cover { align-items: center; justify-content: center; text-align: center; padding-top: 0; }
+  .cover-logo { font-weight: 800; font-size: 40px; color: #3d2de0; line-height: 1; margin-bottom: 5vh; }
+  .cover-title {
+    font-size: clamp(72px, 10vw, 140px);
+    font-weight: 700;
+    color: #1a1a3e;
+    line-height: 0.95;
+    letter-spacing: -4px;
+  }
+  .cover-subtitle {
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 4vh;
+  }
+
+  /* Big headline (Platform slide) */
+  .big-headline {
+    font-size: clamp(56px, 8vw, 120px);
+    font-weight: 700;
+    color: #1a1a3e;
+    line-height: 1;
+    letter-spacing: -3px;
+  }
+
+  /* Descriptor */
+  .descriptor-text {
+    font-size: clamp(32px, 4.5vw, 56px);
+    color: #1a1a3e;
+    line-height: 1.2;
+    font-weight: 400;
+  }
+  .descriptor-text .accent { color: #3d2de0; font-weight: 500; }
+
+  /* Solution */
+  .solution-pill {
+    display: inline-block;
+    background: #3d2de0;
+    color: #fff;
+    padding: 24px 48px;
+    border-radius: 60px;
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 600;
+  }
+
+  /* Journey */
+  .journey-text {
+    font-size: clamp(28px, 3.8vw, 48px);
+    color: #1a1a3e;
+    line-height: 1.25;
+    font-weight: 400;
+    max-width: 1100px;
+  }
+  .journey-text .accent { color: #3d2de0; font-weight: 600; }
+
+  /* What it delivers — grid */
+  .delivers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    max-width: 900px;
+  }
+  .deliver-card {
+    background: #f7f6ff;
+    border-left: 4px solid #3d2de0;
+    padding: 26px 30px;
+    border-radius: 10px;
+  }
+  .deliver-card .name {
+    font-size: 26px;
+    font-weight: 600;
+    color: #1a1a3e;
+    line-height: 1.2;
+  }
+  .deliver-card .sub {
+    font-size: 17px;
+    color: #666;
+    margin-top: 6px;
+  }
+  .across {
+    font-size: 16px;
+    color: #888;
+    margin-top: 1.5rem;
+    font-style: italic;
+  }
+
+  /* Value proposition grid */
+  .vp-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    row-gap: 18px;
+    column-gap: 32px;
+    font-size: clamp(20px, 2.2vw, 28px);
+    max-width: 1100px;
+  }
+  .vp-key {
+    font-weight: 700;
+    color: #3d2de0;
+    letter-spacing: 1.5px;
+    font-size: 14px;
+    padding-top: 8px;
+  }
+  .vp-value {
+    color: #1a1a3e;
+    line-height: 1.35;
+  }
+  .vp-because { font-weight: 500; }
+
+  /* Three operating models overview */
+  .models-overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+  }
+  .model-card {
+    background: #fff;
+    border: 2px solid #e5e3f5;
+    border-radius: 16px;
+    padding: 28px 24px;
+  }
+  .model-brand-name {
+    font-size: 30px;
+    font-weight: 700;
+    color: #3d2de0;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .model-commercial-name {
+    font-size: 13px;
+    color: #888;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .model-role {
+    font-size: 17px;
+    color: #1a1a3e;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .model-desc {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+  .model-strongest {
+    border-top: 1px solid #f0eef9;
+    padding-top: 14px;
+    font-size: 13px;
+    color: #3d2de0;
+    font-weight: 600;
+  }
+  .model-strongest .label-mini {
+    color: #888;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .models-sub {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 2.5rem;
+    font-style: italic;
+  }
+
+  /* Model deep dive */
+  .deep-brand-name {
+    font-size: clamp(64px, 8vw, 112px);
+    font-weight: 700;
+    color: #3d2de0;
+    line-height: 1;
+    letter-spacing: -3px;
+    margin-bottom: 0.5rem;
+  }
+  .deep-commercial {
+    font-size: 20px;
+    color: #888;
+    font-weight: 500;
+    letter-spacing: 1px;
+    margin-bottom: 2.5rem;
+  }
+  .deep-role {
+    font-size: clamp(24px, 3vw, 36px);
+    color: #1a1a3e;
+    font-weight: 500;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+    max-width: 900px;
+  }
+  .deep-desc {
+    font-size: 19px;
+    color: #555;
+    line-height: 1.5;
+    max-width: 900px;
+    margin-bottom: 2rem;
+  }
+  .deep-strongest {
+    display: inline-block;
+    background: #f7f6ff;
+    border-left: 4px solid #3d2de0;
+    padding: 18px 26px;
+    border-radius: 10px;
+    font-size: 18px;
+    color: #1a1a3e;
+    font-weight: 600;
+  }
+  .deep-strongest .label-mini {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  /* Rules slide */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 1100px;
+  }
+  .rule-block {
+    border-top: 3px solid #3d2de0;
+    padding-top: 20px;
+  }
+  .rule-block.commercial { border-top-color: #4ade80; }
+  .rule-block h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a3e;
+    margin-bottom: 4px;
+  }
+  .rule-block .where {
+    font-size: 13px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .rule-block ul {
+    list-style: none;
+    padding: 0;
+  }
+  .rule-block li {
+    font-size: 15px;
+    color: #444;
+    padding: 6px 0;
+    line-height: 1.4;
+  }
+  .rule-block li::before {
+    content: '·';
+    color: #3d2de0;
+    font-weight: 700;
+    margin-right: 10px;
+  }
+
+  .hardest-rule {
+    margin-top: 2.5rem;
+    background: #fef9e8;
+    border-left: 4px solid #d97706;
+    padding: 20px 26px;
+    border-radius: 10px;
+    max-width: 1100px;
+  }
+  .hardest-rule .label-warning {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #92400e;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .hardest-rule .text {
+    font-size: 17px;
+    color: #1a1a3e;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .hardest-rule .text strong { color: #92400e; }
+
+  /* Closing */
+  .closing { align-items: center; justify-content: center; text-align: center; padding-top: 0; }
+  .closing-headline {
+    font-size: clamp(64px, 9vw, 128px);
+    font-weight: 700;
+    color: #1a1a3e;
+    line-height: 0.95;
+    letter-spacing: -3px;
+  }
+  .closing-sub {
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 3rem;
+  }
+  .closing-logo {
+    font-weight: 800;
+    font-size: 28px;
+    color: #3d2de0;
+    line-height: 1;
+    margin-top: 4rem;
+  }
+
+  /* Navigation */
+  .nav {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.98);
+    padding: 10px 18px;
+    border-radius: 100px;
+    box-shadow: 0 8px 32px rgba(26, 26, 62, 0.18);
+    z-index: 100;
+    border: 1px solid #e5e3f5;
+  }
+  .nav-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #f7f6ff;
+    border: 1px solid transparent;
+    color: #3d2de0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover:not(:disabled) {
+    background: #3d2de0;
+    color: #fff;
+  }
+  .nav-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #e5e3f5;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .dot:hover { background: #b8b3e0; }
+  .dot.active {
+    background: #3d2de0;
+    transform: scale(1.35);
+  }
+  .counter {
+    font-size: 13px;
+    color: #666;
+    font-weight: 500;
+    margin: 0 6px;
+    min-width: 48px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .hint {
+    position: fixed;
+    bottom: 26px;
+    right: 32px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    z-index: 100;
+  }
+  @media (max-width: 720px) {
+    .slide { padding: 4vh 5vw 14vh; }
+    .topbar { left: 5vw; right: 5vw; }
+    .delivers-grid, .vp-grid, .models-overview, .rules-grid {
+      grid-template-columns: 1fr;
+    }
+    .vp-grid .vp-key { padding-top: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <div class="slide cover active" data-slide="0">
+    <div class="triangle" style="top: 12%; right: 12%; border-left: 28px solid transparent; border-right: 28px solid transparent; border-bottom: 40px solid #4ade80; transform: rotate(20deg); opacity: 0.9;"></div>
+    <div class="triangle" style="bottom: 18%; left: 10%; border-left: 32px solid transparent; border-right: 32px solid transparent; border-bottom: 48px solid #d946ef; transform: rotate(-35deg); opacity: 0.85;"></div>
+    <div class="triangle" style="top: 22%; left: 18%; border-left: 22px solid transparent; border-right: 22px solid transparent; border-bottom: 32px solid #06b6d4; transform: rotate(60deg); opacity: 0.9;"></div>
+    <div class="cover-logo">instant<br>impact</div>
+    <div class="cover-title">Hire like you<br><span class="underline-wrap">mean it.<svg viewBox="0 0 200 8" preserveAspectRatio="none"><path d="M2 5 Q 100 1, 198 5" stroke="#4ade80" stroke-width="4" fill="none" stroke-linecap="round"/></svg></span></div>
+    <div class="cover-subtitle">Messaging Architecture V3 · 15 June 2026</div>
+  </div>
+
+  <div class="slide" data-slide="1">
+    <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
+    <div class="content">
+      <div class="label">Platform</div>
+      <div class="big-headline">Hire like you <span class="underline-wrap">mean it.<svg viewBox="0 0 200 8" preserveAspectRatio="none"><path d="M2 5 Q 100 1, 198 5" stroke="#4ade80" stroke-width="3" fill="none" stroke-linecap="round"/></svg></span></div>
+      <div class="footnote">What we believe about hiring — not what we sell, not how we deliver, not the operating models.</div>
+    </div>
+  </div>
+
+  <div class="slide" data-slide="2">
+    <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
+    <div class="content">
+      <div class="label">Descriptor</div>
+      <div class="descriptor-text">Specialist recruiters, enabled by AI-native tech.<br><span class="accent">Hiring as it should be.</span></div>
+      <div class="footnote">Sits beneath the platform line. Used on the website, deck covers, brand films. Brand layer.</div>
+    </div>
+  </div>
+
+  <div class="slide" data-slide="3">
+    <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
+    <div class="content">
+      <div class="label">Solution</div>
+      <div class="solution-pill">Instant Impact Talent Engine</div>
+      <div class="footnote">One solution. One umbrella. Three operating models underneath.</div>
+    </div>
+  </div>
+
+  <div class="slide" data-slide="4">
+    <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
+    <div class="content">
+      <div class="label">The Journey</div>
+      <div class="journey-text">From fragmented agency dependency to <span class="accent">world class talent acquisition</span>.<br>Three operating models cover the spectrum.</div>
+    </div>
+  </div>
+
+  <div class="slide" data-slide="5">
+    <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
+    <div class="content">
+      <div class="label">What it delivers</div>
+      <div class="delivers-grid">
+        <div class="deliver-card"><div class="name">Greater control</div><div class="sub">of how you hire</div></div>
+        <div class="deliver-card"><div class="name">A truly accountable partnership</div></div>
+        <div class="deliver-card"><div class="name">Return that builds</div><div class="sub">with every hire</div></div>
+        <div class="deliver-card"><div class="name">Hire quality</div><div class="sub">that proves itself</div></div>
+      </div>
+      <div class="across">Across every operating model.</div>
+    </div>
+  </div>
+
+  <div class="slide" data-slide="6">
+    <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
+    <div class="content">
+      <div class="label">Three Operating Models · Dual-track</div>
+      <div class="models-sub">Brand layer above. Commercial layer below. One earns the meeting; the other wins it.</div>
+      <div class="models-overview">
+        <div class="model-card">
+          <div class="model-brand-name">Talent Function</div>
+          <div class="model-commercial-name">Embedded RPO</div>
+          <div class="model-role">We become your hiring function.</div>
+          <div class="model-desc">End-to-end ownership of the entire program.</div>
+          <div class="model-strongest"><span class="label-mini">Strongest at</span>Transforming hiring into a function</div>
+        </div>
+        <div class="model-card">
+          <div class="model-brand-name">Talent Focus</div>
+          <div class="model-commercial-name">Partial RPO</div>
+          <div class="model-role">We plug your capability gap.</div>
+          <div class="model-desc">Embedded specialists for the scope you choose — functions, role types or volumes.</div>
+          <div class="model-strongest"><span class="label-mini">Strongest at</span>Specialist depth</div>
+        </div>
+        <div class="model-card">
+          <div class="model-brand-name">Talent Flex</div>
+          <div class="model-commercial-name">Lead PSL / Preferred Supplier</div>
+          <div class="model-role">We sit beside your PSL.</div>
+          <div class="model-desc">Committed lead supplier — consolidation, market intelligence, measurable spend reduction.</div>
+          <div class="model-strongest"><span class="label-mini">Strongest at</span>Control without disruption</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" data-slide="8">
+    <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
+    <div class="content">
+      <div class="label">Model 1 · Full RPO</div>
+      <div class="deep-brand-name">Talent Function</div>
+      <div class="deep-commercial">Embedded RPO</div>
+      <div class="deep-role">We become your hiring function.</div>
+      <div class="deep-desc">End-to-end ownership of the entire program. The most comprehensive deployment — we own strategy, sourcing, screening, partnering, intelligence, reporting, employer brand.</div>
+      <div class="deep-strongest"><span class="label-mini">Strongest at</span>Transforming hiring into a function</div>
+    </div>
+  </div>
+
+  <div class="slide" data-slide="9">
+    <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
+    <div class="content">
+      <div class="label">Model 2 · Partial RPO</div>
+      <div class="deep-brand-name">Talent Focus</div>
+      <div class="deep-commercial">Partial RPO</div>
+      <div class="deep-role">We plug your capability gap.</div>
+      <div class="deep-desc">Embedded specialists for the scope you choose — specific functions, role types, geographies or volume thresholds. Scoped depth with shared ownership.</div>
+      <div class="deep-strongest"><span class="label-mini">Strongest at</span>Specialist depth</div>
+    </div>
+  </div>
+
+  <div class="slide" data-slide="10">
+    <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
+    <div class="content">
+      <div class="label">Model 3 · Lead PSL</div>
+      <div class="deep-brand-name">Talent Flex</div>
+      <div class="deep-commercial">Lead PSL / Preferred Supplier</div>
+      <div class="deep-role">We sit beside your PSL.</div>
+      <div class="deep-desc">Committed lead supplier inside your existing PSL. Consolidation, market intelligence and measurable spend reduction. The lightest-touch model. The wedge for organisations not yet ready to embed.</div>
+      <div class="deep-strongest"><span class="label-mini">Strongest at</span>Control without disruption</div>
+    </div>
+  </div>
+
+  <div class="slide" data-slide="11">
+    <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Messaging Architecture V3</div></div>
+    <div class="content">
+      <div class="label">Rules of language use</div>
+      <div class="rules-grid">
+        <div class="rule-block">
+          <div class="where">Brand layer</div>
+          <h3>Talent Function · Focus · Flex</h3>
+          <ul style="margin-top: 14px;">
+            <li>Website, manifesto, About page</li>
+            <li>Brand films, keynotes, events</li>
+            <li>Top-of-funnel content and social</li>
+            <li>Email signatures, deck covers</li>
+            <li>PR and analyst briefings</li>
+          </ul>
+        </div>
+        <div class="rule-block commercial">
+          <div class="where">Commercial layer</div>
+          <h3>Embedded RPO · Partial RPO · Lead PSL</h3>
+          <ul style="margin-top: 14px;">
+            <li>Sales conversations from minute one</li>
+            <li>Pitch deck content and proposals</li>
+            <li>Contracts, MSAs, PSL agreements</li>
+            <li>Procurement and RFP responses</li>
+            <li>Outbound emails and partner talks</li>
+          </ul>
+        </div>
+      </div>
+      <div class="hardest-rule">
+        <div class="label-warning">The single hardest rule</div>
+        <div class="text"><strong>Sales opens with the commercial term. Always.</strong> The biggest risk in dual-track is sales reverting to brand language to sound proprietary. <em>"Our Embedded RPO offer — we call it Talent Function — could replace your current PSL spend in year one"</em> lands.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide closing" data-slide="12">
+    <div class="triangle" style="top: 18%; right: 14%; border-left: 26px solid transparent; border-right: 26px solid transparent; border-bottom: 38px solid #4ade80; transform: rotate(20deg); opacity: 0.85;"></div>
+    <div class="triangle" style="bottom: 22%; left: 12%; border-left: 30px solid transparent; border-right: 30px solid transparent; border-bottom: 44px solid #d946ef; transform: rotate(-35deg); opacity: 0.8;"></div>
+    <div class="content" style="text-align: center;">
+      <div class="closing-headline">Hire like you <span class="underline-wrap">mean it.<svg viewBox="0 0 200 8" preserveAspectRatio="none"><path d="M2 5 Q 100 1, 198 5" stroke="#4ade80" stroke-width="4" fill="none" stroke-linecap="round"/></svg></span></div>
+      <div class="closing-sub">Instant Impact · Talent Engine</div>
+      <div class="closing-logo">instant<br>impact</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav">
+  <button class="nav-btn" id="prev" aria-label="Previous slide">‹</button>
+  <div class="dots" id="dots"></div>
+  <span class="counter" id="counter">1 / 12</span>
+  <button class="nav-btn" id="next" aria-label="Next slide">›</button>
+</div>
+<div class="hint">← → arrow keys</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  let current = 0;
+  const dotsContainer = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(dot);
+  });
+
+  function updateUI() {
+    counter.textContent = (current + 1) + ' / ' + totalSlides;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === totalSlides - 1;
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= totalSlides || index === current) return;
+    slides[current].classList.remove('active');
+    dotsContainer.children[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+    dotsContainer.children[current].classList.add('active');
+    updateUI();
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+    else if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+    else if (e.key === 'Home') goTo(0);
+    else if (e.key === 'End') goTo(totalSlides - 1);
+    else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+
+  updateUI();
+</script>
+</body>
+</html>
