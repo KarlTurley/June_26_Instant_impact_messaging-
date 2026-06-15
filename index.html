@@ -144,11 +144,11 @@
     inset: -14%;
     z-index: 0;
     background:
-      linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.026) 1px, transparent 1px);
+      linear-gradient(rgba(255, 255, 255, 0.062) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.062) 1px, transparent 1px);
     background-size: 92px 92px;
-    opacity: 0.32;
-    mask-image: radial-gradient(ellipse at center, #000 0 54%, transparent 78%);
+    opacity: 0.58;
+    mask-image: radial-gradient(ellipse at center, #000 0 62%, transparent 84%);
     pointer-events: none;
   }
   .manifesto::after {
@@ -159,12 +159,12 @@
     width: min(860px, 82vw);
     height: min(300px, 34vh);
     z-index: 0;
-    border: 1px solid rgba(74, 222, 128, 0.18);
+    border: 1px solid rgba(74, 222, 128, 0.36);
     border-radius: 50%;
     box-shadow:
-      0 0 0 28px rgba(74, 222, 128, 0.035),
-      0 0 0 84px rgba(74, 222, 128, 0.022);
-    opacity: 0.08;
+      0 0 0 28px rgba(74, 222, 128, 0.07),
+      0 0 0 84px rgba(74, 222, 128, 0.044);
+    opacity: 0.16;
     transform: translate(-50%, -50%) scale(0.72);
     pointer-events: none;
   }
@@ -291,10 +291,10 @@
     to { transform: translate3d(92px, 92px, 0); }
   }
   @keyframes manifestoIntentFocus {
-    0% { opacity: 0.05; transform: translate(-50%, -50%) scale(0.72); }
-    70% { opacity: 0.1; transform: translate(-50%, -50%) scale(0.88); }
-    92% { opacity: 0.32; transform: translate(-50%, -50%) scale(1.03); }
-    100% { opacity: 0.24; transform: translate(-50%, -50%) scale(1); }
+    0% { opacity: 0.14; transform: translate(-50%, -50%) scale(0.72); }
+    70% { opacity: 0.22; transform: translate(-50%, -50%) scale(0.88); }
+    92% { opacity: 0.54; transform: translate(-50%, -50%) scale(1.03); }
+    100% { opacity: 0.42; transform: translate(-50%, -50%) scale(1); }
   }
 
   /* Solution */
@@ -327,12 +327,12 @@
     background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.34) 45%, transparent 62%);
     transform: translateX(-130%);
   }
-  .slide.active .solution-pill {
+  .solution-slide.active .solution-pill {
     animation:
       solutionImpactIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards,
       solutionPulse 2.8s ease-in-out 1s infinite;
   }
-  .slide.active .solution-pill::after {
+  .solution-slide.active .solution-pill::after {
     animation: solutionSheen 1.25s ease 0.42s forwards;
   }
   @keyframes solutionImpactIn {
@@ -369,6 +369,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 18px;
+    width: min(900px, 100%);
     max-width: 900px;
   }
   .deliver-card {
@@ -376,6 +377,11 @@
     border-left: 4px solid #3d2de0;
     padding: 26px 30px;
     border-radius: 10px;
+    min-height: 118px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transform: translateZ(0);
   }
   .deliver-card .name {
     font-size: 26px;
