@@ -1,0 +1,10 @@
+{
+  "name": "june-26-instant-impact-messaging",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-static-site.mjs",
+    "test": "node scripts/validate-static-site.mjs"
+  }
+}
