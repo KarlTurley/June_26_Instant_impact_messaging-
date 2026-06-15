@@ -134,48 +134,70 @@
   .manifesto {
     background: #101023;
     color: #fff;
+    align-items: center;
     justify-content: center;
+    text-align: center;
   }
   .manifesto .topbar .logo { color: #fff; }
   .manifesto .topbar .version { color: rgba(255, 255, 255, 0.58); }
   .manifesto .label { color: #4ade80; }
   .manifesto-content {
-    max-width: 1120px;
+    width: min(1120px, 86vw);
+    max-width: none;
+    min-height: 56vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
   .manifesto-kicker {
+    position: absolute;
+    top: 20vh;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 13px;
     letter-spacing: 3px;
     color: #4ade80;
     text-transform: uppercase;
     font-weight: 700;
-    margin-bottom: 1.8rem;
+    margin-bottom: 0;
+    white-space: nowrap;
   }
   .manifesto-line {
-    font-size: clamp(18px, 2.25vw, 32px);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(920px, 86vw);
+    font-size: clamp(18px, 2.1vw, 30px);
     color: rgba(255, 255, 255, 0.86);
-    line-height: 1.16;
+    line-height: 1.22;
     font-weight: 600;
-    margin: 0.34rem 0;
-    max-width: 1080px;
+    margin: 0;
+    max-width: none;
     opacity: 0;
-    transform: translateY(28px);
+    transform: translate(-50%, -42%) scale(0.98);
   }
-  .manifesto-line.tight { margin-top: 1.3rem; }
   .manifesto-line.belief {
     color: #fff;
     font-weight: 700;
   }
   .manifesto-line.final {
     color: #fff;
-    font-size: clamp(36px, 5.6vw, 78px);
+    font-size: clamp(44px, 7vw, 102px);
     font-weight: 800;
     line-height: 0.98;
-    margin-top: 1.55rem;
-    letter-spacing: -2px;
+    margin-top: 0;
+    letter-spacing: 0;
+    width: min(1050px, 90vw);
   }
   .manifesto-line .accent {
     color: #4ade80;
     font-weight: 800;
+  }
+  .manifesto-copy {
+    display: inline-block;
+    overflow: hidden;
+    clip-path: inset(0 100% 0 0);
   }
   .manifesto-glow {
     position: absolute;
@@ -186,15 +208,38 @@
     border-radius: 50%;
     opacity: 0;
   }
-  .slide.active .manifesto-line {
-    animation: manifestoIn 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  .slide.active .manifesto-line:not(.final) {
+    animation: manifestoLineLife 2.7s ease forwards;
+    animation-delay: var(--delay);
+  }
+  .slide.active .manifesto-line:not(.final) .manifesto-copy {
+    animation: manifestoType 1.05s steps(34, end) forwards;
+    animation-delay: var(--delay);
+  }
+  .slide.active .manifesto-line.final {
+    animation: manifestoFinal 1.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--delay);
+  }
+  .slide.active .manifesto-line.final .manifesto-copy {
+    animation: manifestoType 1.1s steps(22, end) forwards;
     animation-delay: var(--delay);
   }
   .slide.active .manifesto-glow {
     animation: manifestoPulse 4.8s ease-in-out 0.6s infinite;
   }
-  @keyframes manifestoIn {
-    to { opacity: 1; transform: translateY(0); }
+  @keyframes manifestoLineLife {
+    0% { opacity: 0; transform: translate(-50%, -38%) scale(0.98); }
+    18% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    72% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -58%) scale(1.02); }
+  }
+  @keyframes manifestoFinal {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.76); }
+    55% { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+  @keyframes manifestoType {
+    to { clip-path: inset(0 0 0 0); }
   }
   @keyframes manifestoPulse {
     0%, 100% { opacity: 0.28; transform: scale(0.88); }
@@ -596,16 +641,16 @@
     <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Manifesto</div></div>
     <div class="content manifesto-content">
       <div class="manifesto-kicker">This is the moment</div>
-      <p class="manifesto-line" style="--delay: 0.1s;">Somewhere along the way, we lost the passion for hiring.</p>
-      <p class="manifesto-line" style="--delay: 1.0s;">Every leader says people are their most important asset. Yet we left the finding of them to strangers.</p>
-      <p class="manifesto-line" style="--delay: 2.1s;">Hiring became a task. A scramble. A line item.</p>
-      <p class="manifesto-line belief tight" style="--delay: 3.0s;">It doesn't have to be.</p>
-      <p class="manifesto-line belief" style="--delay: 3.8s;">We believe hiring is the most strategic thing you do.</p>
-      <p class="manifesto-line belief" style="--delay: 4.7s;">We believe the people you bring in build the business you become.</p>
-      <p class="manifesto-line belief" style="--delay: 5.6s;">We believe in hiring with intent.</p>
-      <p class="manifesto-line" style="--delay: 6.5s;">Like every hire matters. Like talent is your advantage. Like the people you bring in are building something that lasts.</p>
-      <p class="manifesto-line belief" style="--delay: 7.6s;">Because they are.</p>
-      <p class="manifesto-line final" style="--delay: 8.4s;">Hire like you <span class="accent">mean it.</span></p>
+      <p class="manifesto-line" style="--delay: 0.2s;"><span class="manifesto-copy">Somewhere along the way, we lost the passion for hiring.</span></p>
+      <p class="manifesto-line" style="--delay: 2.8s;"><span class="manifesto-copy">Every leader says people are their most important asset. Yet we left the finding of them to strangers.</span></p>
+      <p class="manifesto-line" style="--delay: 5.4s;"><span class="manifesto-copy">Hiring became a task. A scramble. A line item.</span></p>
+      <p class="manifesto-line belief" style="--delay: 8.0s;"><span class="manifesto-copy">It doesn't have to be.</span></p>
+      <p class="manifesto-line belief" style="--delay: 10.6s;"><span class="manifesto-copy">We believe hiring is the most strategic thing you do.</span></p>
+      <p class="manifesto-line belief" style="--delay: 13.2s;"><span class="manifesto-copy">We believe the people you bring in build the business you become.</span></p>
+      <p class="manifesto-line belief" style="--delay: 15.8s;"><span class="manifesto-copy">We believe in hiring with intent.</span></p>
+      <p class="manifesto-line" style="--delay: 18.4s;"><span class="manifesto-copy">Like every hire matters. Like talent is your advantage. Like the people you bring in are building something that lasts.</span></p>
+      <p class="manifesto-line belief" style="--delay: 21.0s;"><span class="manifesto-copy">Because they are.</span></p>
+      <p class="manifesto-line final" style="--delay: 23.0s;"><span class="manifesto-copy">Hire like you <span class="accent">mean it.</span></span></p>
     </div>
   </div>
 
