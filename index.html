@@ -184,6 +184,14 @@
       radial-gradient(circle at 6% 86%, rgba(217, 70, 239, 0.09), transparent 26%),
       #fff;
   }
+  .cta-lead-line {
+    font-size: clamp(20px, 2.4vw, 32px);
+    font-weight: 500;
+    color: #a6a2be;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.7rem;
+  }
   .cta-headline {
     font-size: clamp(42px, 6vw, 88px);
     font-weight: 700;
@@ -220,13 +228,15 @@
     text-decoration-thickness: 2px;
   }
   .call-to-arms .label,
+  .call-to-arms .cta-lead-line,
   .call-to-arms .cta-headline,
   .call-to-arms .cta-chip {
     opacity: 0;
     transform: translateY(14px);
   }
   .call-to-arms.active .label { animation: heroFadeUp 0.55s ease 0.05s forwards; }
-  .call-to-arms.active .cta-headline { animation: heroFadeUp 0.75s ease 0.18s forwards; }
+  .call-to-arms.active .cta-lead-line { animation: heroFadeUp 0.55s ease 0.1s forwards; }
+  .call-to-arms.active .cta-headline { animation: heroFadeUp 0.75s ease 0.28s forwards; }
   .call-to-arms.active .cta-chip {
     animation: ctaChipIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
@@ -838,14 +848,81 @@
   .deliver-card {
     background: #f7f6ff;
     border-left: 4px solid #3d2de0;
-    padding: 26px 30px;
+    padding: 24px 28px;
     border-radius: 10px;
     min-height: 118px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    transform: translateZ(0);
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 8px 24px rgba(26, 26, 62, 0.06);
+    opacity: 0;
+    transform: translateY(42px) scale(0.84);
   }
+  .bold-slide.active .deliver-card {
+    animation: cardRise 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: var(--card-delay);
+  }
+  @keyframes cardRise {
+    0% { opacity: 0; transform: translateY(42px) scale(0.84); box-shadow: 0 8px 24px rgba(26, 26, 62, 0.06); }
+    70% { box-shadow: 0 22px 50px rgba(61, 45, 224, 0.2); }
+    100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: 0 14px 36px rgba(61, 45, 224, 0.12); }
+  }
+  .deliver-icon {
+    position: relative;
+    flex: 0 0 auto;
+    width: 62px;
+    height: 62px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #3d2de0, #6b4eff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 24px rgba(61, 45, 224, 0.32);
+    opacity: 0;
+    transform: scale(0.4) rotate(-18deg);
+  }
+  .deliver-icon svg { width: 32px; height: 32px; }
+  .bold-slide.active .deliver-icon {
+    animation: iconPop 0.7s cubic-bezier(0.34, 1.8, 0.5, 1) forwards;
+    animation-delay: calc(var(--card-delay) + 0.14s);
+  }
+  @keyframes iconPop {
+    0% { opacity: 0; transform: scale(0.4) rotate(-18deg); }
+    55% { opacity: 1; transform: scale(1.22) rotate(6deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+  }
+  /* Green ring bursts out from the badge the moment its icon finishes drawing. */
+  .deliver-icon::after {
+    content: "";
+    position: absolute;
+    inset: -7px;
+    border-radius: 20px;
+    border: 2.5px solid rgba(74, 222, 128, 0.7);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .bold-slide.active .deliver-icon::after {
+    animation: iconRing 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--card-delay) + 0.5s);
+  }
+  @keyframes iconRing {
+    0% { opacity: 0; transform: scale(0.65); }
+    35% { opacity: 1; }
+    100% { opacity: 0; transform: scale(1.4); }
+  }
+  .deliver-icon svg [pathLength] {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .bold-slide.active .deliver-icon svg [pathLength] {
+    animation: iconDraw 0.7s ease forwards;
+    animation-delay: calc(var(--card-delay) + 0.34s);
+  }
+  @keyframes iconDraw {
+    to { stroke-dashoffset: 0; }
+  }
+  .deliver-text { display: flex; flex-direction: column; justify-content: center; }
   .deliver-card .name {
     font-size: 26px;
     font-weight: 600;
@@ -1329,7 +1406,8 @@
   <div class="slide call-to-arms" data-slide="1">
     <div class="topbar"><div class="logo">instant<br>impact</div><div class="version">Platform line · Call to arms</div></div>
     <div class="content">
-      <div class="cta-headline">We're not here to fill roles.<br>We're here to change <span class="accent">how the world hires.</span></div>
+      <div class="cta-lead-line">We're not here for one-off hires.</div>
+      <div class="cta-headline">We're here to change <span class="accent">how the world hires.</span></div>
       <div class="cta-distinction" aria-label="What the platform line is and is not">
         <span class="cta-chip is">What we believe about hiring</span>
         <span class="cta-chip not">Not what we sell</span>
@@ -1414,10 +1492,46 @@
     <div class="content">
       <div class="label">What it delivers</div>
       <div class="delivers-grid">
-        <div class="deliver-card"><div class="name">Greater control</div><div class="sub">of how you hire</div></div>
-        <div class="deliver-card"><div class="name">A truly accountable partnership</div></div>
-        <div class="deliver-card"><div class="name">Return that builds</div><div class="sub">with every hire</div></div>
-        <div class="deliver-card"><div class="name">Hire quality</div><div class="sub">that proves itself</div></div>
+        <div class="deliver-card" style="--card-delay: 0.1s;">
+          <div class="deliver-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="4" y1="8" x2="20" y2="8" pathLength="1"/>
+              <line x1="4" y1="16" x2="20" y2="16" pathLength="1"/>
+              <circle cx="14" cy="8" r="2.6" pathLength="1"/>
+              <circle cx="9" cy="16" r="2.6" pathLength="1"/>
+            </svg>
+          </div>
+          <div class="deliver-text"><div class="name">Greater control</div><div class="sub">of how you hire</div></div>
+        </div>
+        <div class="deliver-card" style="--card-delay: 0.25s;">
+          <div class="deliver-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3 L20 6 V11 C20 16 16.5 19.5 12 21 C7.5 19.5 4 16 4 11 V6 Z" pathLength="1"/>
+              <path d="M8.5 12 L11 14.5 L15.5 9.5" pathLength="1"/>
+            </svg>
+          </div>
+          <div class="deliver-text"><div class="name">A truly accountable partnership</div></div>
+        </div>
+        <div class="deliver-card" style="--card-delay: 0.4s;">
+          <div class="deliver-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="6" y1="20" x2="6" y2="14" pathLength="1"/>
+              <line x1="12" y1="20" x2="12" y2="10" pathLength="1"/>
+              <line x1="18" y1="20" x2="18" y2="5" pathLength="1"/>
+              <path d="M4 12 L9 9 L13 11 L20 4" pathLength="1"/>
+              <path d="M16 4 L20 4 L20 8" pathLength="1"/>
+            </svg>
+          </div>
+          <div class="deliver-text"><div class="name">Return that builds</div><div class="sub">with every hire</div></div>
+        </div>
+        <div class="deliver-card" style="--card-delay: 0.55s;">
+          <div class="deliver-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3 L14.6 9.2 L21 9.7 L16 14 L17.6 20.4 L12 16.8 L6.4 20.4 L8 14 L3 9.7 L9.4 9.2 Z" pathLength="1"/>
+            </svg>
+          </div>
+          <div class="deliver-text"><div class="name">Unmatched hiring quality</div></div>
+        </div>
       </div>
       <div class="across">Across every operating model.</div>
     </div>
@@ -1453,7 +1567,7 @@
         <div class="model-card">
           <div class="model-brand-name">Talent Flex</div>
           <div class="model-commercial-name">Lead PSL / Preferred Supplier</div>
-          <div class="model-role">We lead your PSL.</div>
+          <div class="model-role">We set the standard for your PSL.</div>
           <div class="model-desc">Committed lead supplier — consolidation, market intelligence, measurable spend reduction.</div>
           <div class="model-strongest"><span class="label-mini">Strongest at</span>Control without disruption</div>
         </div>
@@ -1491,7 +1605,7 @@
       <div class="label">Model 3 · Lead PSL</div>
       <div class="deep-brand-name">Talent Flex</div>
       <div class="deep-commercial">Lead PSL / Preferred Supplier</div>
-      <div class="deep-role">We lead your PSL.</div>
+      <div class="deep-role">We set the standard for your PSL.</div>
       <div class="deep-desc">Committed lead supplier inside your existing PSL. Consolidation, market intelligence and measurable spend reduction. The lightest-touch model. The wedge for organisations not yet ready to embed.</div>
       <div class="deep-strongest"><span class="label-mini">Strongest at</span>Control without disruption</div>
     </div>
